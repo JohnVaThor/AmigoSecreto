@@ -3,30 +3,59 @@
 // Arreglo para almacenar los amigos
 const amigos = [];
 
-// Función para agregar un amigo
-function agregarAmigo() {
-  // 1️⃣ Capturar el valor del campo de entrada
-  const input = document.getElementById("nombreAmigo");
-  const nombre = input.value.trim(); // Elimina espacios en blanco
-
-  // 2️⃣ Validar la entrada
-  if (nombre === "") {
-    alert("Por favor, inserte un nombre.");
-    return; // Detener la ejecución si el campo está vacío
-  }
-
-  // 3️⃣ Actualizar el array de amigos
-  amigos.push(nombre);
-
-  // (Opcional) Mostrar en la lista de la página si tienes un elemento <ul id="listaAmigos">
+// (opcional) función para volver a pintar la lista en el DOM
+function renderLista() {
   const lista = document.getElementById("listaAmigos");
-  if (lista) {
+  if (!lista) return;
+  lista.innerHTML = "";
+  for (const nombre of amigos) {
     const li = document.createElement("li");
     li.textContent = nombre;
     lista.appendChild(li);
   }
+}
 
-  // 4️⃣ Limpiar el campo de entrada
+// Función para agregar un amigo (llamada desde el botón "Añadir")
+function agregarAmigo() {
+  // 1) Capturar el valor del campo de entrada
+  const input = document.getElementById("amigo");
+  const nombre = input.value.trim();
+
+  // 2) Validar la entrada
+  if (nombre === "") {
+    alert("Por favor, inserte un nombre.");
+    return;
+  }
+
+  // 3) Actualizar el array de amigos
+  amigos.push(nombre);
+
+  // Actualizar la lista visible (opcional pero útil)
+  renderLista();
+
+  // 4) Limpiar el campo de entrada
   input.value = "";
-  input.focus(); // Devuelve el foco al campo de texto
+  input.focus();
+}
+
+// Tu HTML tiene un botón que llama a sortearAmigo(), así que la definimos
+function sortearAmigo() {
+  if (amigos.length === 0) {
+    alert("No hay amigos para sortear. Agrega al menos uno.");
+    return;
+  }
+
+  const indice = Math.floor(Math.random() * amigos.length);
+  const elegido = amigos[indice];
+
+  const resultado = document.getElementById("resultado");
+  if (resultado) {
+    resultado.innerHTML = "";
+    const li = document.createElement("li");
+    li.textContent = `Amigo secreto: ${elegido}`;
+    resultado.appendChild(li);
+  } else {
+    // por si no existe la lista de resultado
+    alert(`Amigo secreto: ${elegido}`);
+  }
 }
